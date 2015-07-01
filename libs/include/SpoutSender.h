@@ -1,8 +1,7 @@
 /*
 
-			Spout.h
-
-			The main Spout include file for the SDK
+					SpoutSender.h
+ 
 
 		Copyright (c) 2014>, Lynn Jarvis. All rights reserved.
 
@@ -26,16 +25,49 @@
 		LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 		OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 */
 #pragma once
 
-#ifndef __Spout__
-#define __Spout__
+#ifndef __SpoutSender__
+#define __SpoutSender__
 
-#include "SpoutSender.h"
-#include "SpoutReceiver.h"
+#include "spoutSDK.h"
 
-//	All documentation in the SDK pdf = SpoutSDK.pdf
+class SPOUT_DLLEXP SpoutSender {
+
+	public:
+
+	SpoutSender();
+    ~SpoutSender();
+
+	bool CreateSender(char *Sendername, unsigned int width, unsigned int height, DWORD dwFormat = 0);
+	bool UpdateSender(char *Sendername, unsigned int width, unsigned int height);
+	void ReleaseSender(DWORD dwMsec = 0);
+
+	bool SendImage(unsigned char* pixels, unsigned int width, unsigned int height, GLenum glFormat = GL_RGB, bool bAlignment = true, bool bInvert=true);
+	bool SendTexture(GLuint TextureID, GLuint TextureTarget, unsigned int width, unsigned int height, bool bInvert=true, GLuint HostFBO = 0);
+	bool DrawToSharedTexture(GLuint TextureID, GLuint TextureTarget, unsigned int width, unsigned int height, float max_x = 1.0, float max_y = 1.0, float aspect = 1.0, bool bInvert = true, GLuint HostFBO = 0);
+
+	bool SetMemoryShareMode(bool bMemoryMode = true);
+	bool GetMemoryShareMode();
+
+	bool SetDX9(bool bDX9 = true); // set to use DirectX 9 (default is DirectX 11)
+	bool GetDX9();
+
+	void SetDX9compatible(bool bCompatible = true); // DirectX 11 format compatible with DirectX 9
+	bool GetDX9compatible();
+
+	bool SetVerticalSync(bool bSync = true);
+	int GetVerticalSync();
+
+	bool SenderDebug(char *Sendername, int size);
+
+	Spout spout; // LJ DEBUG - for testing
+
+protected :
+
+	// Spout spout;
+
+};
 
 #endif

@@ -1,56 +1,86 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup()
-{
-	ofSetWindowTitle("ofxSpout sender example");
-
-	_red = 0;
-	_isIncreasing = true;
-
-	// initialize Spout with a sender name, and a texture size
-	ofxSpout::init("ofxSpout sender example", ofGetWidth(), ofGetHeight(), true);	
+void ofApp::setup(){
+	ofSetFrameRate(60);
+	kitten = ofImage("kitten.jpg");
+	snow = ofImage("snow.jpg");
+	fbo.allocate(kitten.width + snow.width, snow.height);
 }
 
 //--------------------------------------------------------------
-void ofApp::update()
-{
-	if (_isIncreasing)
-		_red++;
-	else
-		_red--;
+void ofApp::update(){
+	//generate some content
+	fbo.begin();
+	ofClear(0,0,0,255);
+	kitten.draw(0,0);
+	ofDrawBitmapString("OF Frame " + ofToString(ofGetFrameNum()),10,kitten.height + 30);
+	ofTranslate(kitten.width, 0);
+	ofSetColor((ofGetElapsedTimeMillis()/10)%255, (ofGetElapsedTimeMillis()/11)%255, (ofGetElapsedTimeMillis()/13)%255); 
+	snow.draw(0,0);
+	fbo.end();
 
-	if (_red > 254)
-		_isIncreasing = false;
-	else if (_red < 0)
-		_isIncreasing = true;
+
+
+	//Spout
+	spout.sendTexture(kitten.getTextureReference(), "kitten");
+	spout.sendTexture(snow.getTextureReference(), "snow");
+	spout.sendTexture(fbo.getTextureReference(), "composition");
 }
 
 //--------------------------------------------------------------
-void ofApp::draw()
-{
-	// init sender if it's not already initialized
-	ofxSpout::initSender();
+void ofApp::draw(){
+	ofSetColor(255);
+	ofClear(0,0,0,255);
+	fbo.draw(0,0);
 
-	// set background with a red color
-	ofSetColor(_red, 0, 0);
-	ofRect(0, 0, ofGetWidth(), ofGetHeight());
+}
 
-	// add a yellow circle
-	ofSetColor(ofColor::yellow);
-	ofCircle(ofGetWidth() / 2 + ofSignedNoise(ofGetElapsedTimef()) * ofGetWidth() / 2, ofGetHeight() / 3 + ofNoise(ofGetElapsedTimef() * 2) * ofGetHeight() / 2, 40);
-
-	// send screen to Spout
-	ofxSpout::sendTexture();
-
-	// this text is not sent to spout, because it's drawn after the sendTexture call
-	ofDrawBitmapStringHighlight("ofxSpout sender example", 20, ofGetHeight() - 20);
+void ofApp::exit() {
+	spout.exit();
 }
 
 //--------------------------------------------------------------
-void ofApp::exit()
-{
-	// exit spout
-	ofxSpout::exit();
+void ofApp::keyPressed(int key){
+
 }
 
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseDragged(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
+
+}
